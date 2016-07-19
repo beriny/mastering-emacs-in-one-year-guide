@@ -308,8 +308,172 @@ Xah Lee 提供[[http://ergoemacs.org/emacs/buy_xah_emacs_tutorial.html][付费Li
 
 例如，你是否意识到之前的章节意味着以下行动:
 - 找出所有插件的作者
-- 在Quora/Twitter/Github/Reddit/Google+上跟随他们
+- 在Quora/Twitter/GitHub/Reddit/Google+上跟随他们
 - 通读他们已发表的贴子
+** 使用[[https://bitbucket.org/lyro/evil/wiki/Home][Evil]](Vim模拟器）
+如果你不熟悉Vim,在命令行里运行=vimtutor=或者安装Emacs插件[[https://github.com/syl20bnr/evil-tutor][evil-tutor]]学习Vim基本命令. 
+
+该教程大概需要半小时.关于Vim的基本操作的讨论就到此为止了.网上关于Vim教程汗牛充栋,你可以自行阅读.
+
+本文的重点是探讨如何结合Emacs和Vim获得完美文本编辑器,达到*神用编辑器之神*的境界.
+
+*** Text Object
+了解[[http://vimdoc.sourceforge.net/htmldoc/motion.html][Vim Text Object]]的概念.
+
+Evil的强大之处就是你可以用Emacs Lisp来自定义"Text Object".自由的Lisp使得你完全不用理睬Vim中的"约定俗成".
+
+比如在操作自定义的Text Object时,当前焦点完全可以在Text Object之外.这是Lisp写的[[http://blog.binchen.org/posts/evil-text-object-to-select-nearby-file-path.html][寻找附近的文件路径或者URL.]] 用Vim Script写个类似的脚本难很多.即使你用了[[https://github.com/kana/vim-textobj-user][vim-textobj-user]]之类的插件辅助开发也没用的.
+
+而且Lisp代码完全可以调用*任何*的第三方插件或者Emacs的不计其数的API.比如Evil中操作Text Object的过程中我完全可以显示对话框问用户问题,访问几个网站等等.
+
+这些额外功能对Vim来说就是不可能完成的任务了.
+
+*** Leader键 
+Vim自带Leader键的功能,你先按了Leader键(很多人定义为空格键)后,再按其他键(比如"kk")会触发你自定义的命令.本质就是给你更多的快捷键.
+
+在Emacs中我们需要使用第三方插件如[[https://github.com/cofi/evil-leader][evil-leader]]来实现类似功能.
+
+某些Vim用户不能迁移到Evil的原因就是自定义了太多使用Ctrl键的快捷键,和Emacs默认的快捷键有冲突.
+
+这些用户没有意识到的是借鉴Emacs的思想,他们在Vim和Emacs的效率可以有巨大的提升. 我只提三点供参考:
+
+第一,典型Vim的用户的问题是没有充份利用Leader快捷键.我看过大多数Vim高手在GitHub上的设置,他们一般定义10到20个左右*Leader相关的快捷键.
+
+我定义了300个Leader相关的快捷键.而且我的插件比典型Evil用户(如spacemacs)少很多,才200个插件,所以我要用的快捷键也少.
+
+一般用户大概有5000到10000个Leader相关快捷键可用.
+
+第二,Vim用户的另一个问题是快捷键没有优化.最常用的快捷键应该最容易按.何为最常用快捷键必须来自*真实数据*.
+
+这是我用Emacs的插件[[https://github.com/dacap/keyfreq][keyfreq]]测试六个月后得到的部份数据 (我的Leader键定义为逗号):
+| Times | Percentage | Command                                | Key                   |
+|-------+------------+----------------------------------------+-----------------------|
+|  4967 |     12.00% | evilmi-jump-items                      | %                     |
+|  2892 |      6.99% | compile                                | , o o                 |
+|  2178 |      5.26% | find-file-in-project-by-selected       | , k k                 |
+|  1953 |      4.72% | copy-to-x-clipboard                    | , a a                 |
+|  1566 |      3.78% | paste-from-x-clipboard                 | , z z                 |
+|  1227 |      2.96% | er/expand-region                       | , x x                 |
+|   897 |      2.17% | evil-repeat                            | .                     |
+|   866 |      2.09% | ido-find-file                          | , x f, C-x C-f        |
+|   819 |      1.98% | toggle-full-window                     | , f f                 |
+|   815 |      1.97% | etags-select-find-tag-at-point         | C-], , h t            |
+|   721 |      1.74% | back-to-previous-buffer                | , b b                 |
+|   682 |      1.65% | split-window-vertically                | , x 2                 |
+|   539 |      1.30% | find-function                          | , h f, C-h C-f        |
+|   494 |      1.19% | counsel-recentf-goto                   | , r r                 |
+|   397 |      0.96% | counsel-git-grep                       | , g g                 |
+|   376 |      0.91% | delete-other-windows                   | , x 1, C-x 1          |
+|   372 |      0.90% | evilnc-comment-or-uncomment-lines      | , c i                 |
+|   351 |      0.85% | eval-expression                        | , e e, M-:            |
+|   326 |      0.79% | evilmi-select-items                    | , s i                 |
+|   320 |      0.77% | paredit-doublequote                    |                       |
+|   307 |      0.74% | evil-filepath-outer-text-object        |                       |
+|   300 |      0.72% | steve-ido-choose-from-recentf          |                       |
+|   295 |      0.71% | split-window-horizontally              | , x 3                 |
+|   283 |      0.68% | git-add-current-file                   | , x v a               |
+|   279 |      0.67% | winner-undo                            | , x u, , s u, C-x 4 u |
+|   278 |      0.67% | describe-function                      | , h d, C-h f          |
+|   278 |      0.67% | evil-goto-mark-line                    | '                     |
+|   269 |      0.65% | ido-kill-buffer                        | , x k, C-x k          |
+|   254 |      0.61% | evil-goto-definition                   | g d                   |
+|   253 |      0.61% | pop-tag-mark                           | M-*                   |
+|   251 |      0.61% | git-messenger:popup-message            | , x v b, C-x v p      |
+|   246 |      0.59% | my-goto-next-hunk                      | , n n                 |
+|   237 |      0.57% | evilnc-comment-operator                | , ,                   |
+|   235 |      0.57% | flyspell-goto-next-error               | , f e, C-,            |
+|   214 |      0.52% | evil-exit-emacs-state                  |                       |
+|   212 |      0.51% | browse-kill-ring-forward               |                       |
+|   210 |      0.51% | flyspell-buffer                        | , f b                 |
+第三, 由于Lisp的强大Leader键的使用在Emacs中有无限可能
+如果你使用[[https://github.com/noctuid/general.el][general.el代替evil-leader,]]你可以以同时定义多个Leader键.可以在切换文件的时候切换Leader键等等.
+
+*** Evil和Emacs原生插件的兼容性
+如果你真正理解了我前面的章节,这就根本不是问题.
+
+之前我提到了要保持头脑开放,要尽可能抄高手的代码,积极的报bug等观点.现在让我演示一下如何应用.
+
+我知道有很多人宣称,Evil和Emacs的许多插件有快捷键冲突,重新配置很麻烦.
+
+一开始我也相信了这些一派胡言,所以每装一个新的插件,都要辛辛苦苦再设置evil的快捷键.
+
+有一天我问自己,Lisp那么强大,Evil那么优秀,也许有更方便的简洁方案?许多人说不行不一定是真理,只有实际调查过的人才有发言权.
+
+我也没有自己钻研Evil的代码,取而代之的是[[https://bitbucket.org/lyro/evil/issue/511/let-certain-minor-modes-key-bindings][给Evil的开发者Frank Fischer报了个bug]],他给我了一个完美的方案,根本不需要重设快捷键.
+
+这是这个方案在[[https://github.com/pidu/git-timemachine][git-timemachine中]]的[[http://emacs.stackexchange.com/questions/9842/disable-evil-mode-when-git-timemachine-mode-is-activated][完美应用]].
+*** Evil专用的插件介绍
+我就选择[[http://melpa.org][MELPA]]上最流行的5个插件简单介绍一下,类似的优秀插件还有很多.
+
+要点不在于你装了多少插件,而在于理解由于Lisp的强大和Emacs的自由,这些插件比Vim对应的插件功能更多,更容易拓展.
+
+**** [[https://github.com/timcharper/evil-surround][evil-surround]]
+对应[[https://github.com/tpope/vim-surround][vim-surround]]. 
+
+我通常用[[https://github.com/magnars/expand-region.el/blob/master/expand-region-core.el][expand-region选中一段文本,然后按=S=或者=M-x evil-surround-region=,再按任意字符(比如双引号)就可以在文本]]首尾两端附加该字符.
+
+当然它也支持修改删除操作.
+
+之前提到的text object也完美支持.
+
+懂Lisp的话可以修改=evil-surround-operator-alist=自己定制操作.
+
+**** [[https://github.com/redguardtoo/evil-nerd-commenter][evil-nerd-commenter]]
+对应[[https://github.com/scrooloose/nerdcommenter][vim-nerd-commenter]],这是我写的,功能更强大.
+
+你可以=M-x 5 evilnc-comment-or-uncomment-lines=快速注释当前5行或者取消注释当前5行.
+
+你也可以选中一个区域=M-x evilnc-comment-or-uncomment-lines=
+
+由于Emacs的强大,默认就支持所有世界上已知的语言,而核心代码也就是1行而已.Vim插件对应的功能代码要有400行.
+
+如果你在[[http://orgmode.org/][org-mode格式的单一文件中]]中混杂多种语言的话,它也能智能识别.这个功能在Vim中基本不可能实现.
+**** [[https://github.com/redguardtoo/evil-matchit][evil-matchit]] 
+对应[[https://github.com/tmhedberg/matchit][vim-matchit]].又是我写的.自然功能更强大.
+
+本质就是你当前焦点在文件的某个位置A,你按=%=或者=M-x evilmi-jump-items=,焦点移到位置B,你再按同样的键,又回到了位置A.
+
+比如在一个HTML文件中,你就可以在=<body>=和=</body>=间跳来跳去.其他各种编程语言都支持.
+
+Vim对应的代码我读过,限制比较多,比如你一定要先定义一对正则表达式来匹配A和B的位置.这种限制在某些语言如Python中就会比较麻烦.
+
+Emacs的实现就完全体现了Emacs的自由精神,我建立了一个动态查询的矩阵,矩阵的元素就是函数对象而已.用户可以在运行时替换这些函数对象,所以怎么跳转,跳到哪都是完全自由的.
+
+所以python的支持就毫无问题.想支持更多的语言或者对我的实现不满意,在=.emacs=中写几行Lisp代码就可以了.
+**** [[https://github.com/syl20bnr/evil-escape][evil-escape]]
+按自定义快捷键退出当前的各种状态,相当于Vim中的=ESC=或者Emacs中的=C-g=.
+
+我定义自定义快捷键为=kj=.如果你效率高的话,取消的默认快捷键就太慢了.
+
+让我给你举个例子说明什么叫效率高.我移动手指去按ESC键需要0.5秒.
+
+Sublime Text默认的文本搜索要比我的Emacs设置慢40倍.如果Sublime Text搜索需要我等待40秒,那么节省按取消键的0.5秒就毫无意义.
+
+我只需要1秒完成搜索,所以把取消操操作从0.5秒减少到0.1秒的感觉就完全不一样.
+**** [[https://github.com/bling/evil-visualstar][evil-visualstar]] 
+对应[[https://github.com/bronson/vim-visual-star-search][vim-visual-star-search.]]
+
+选择一段文本,按=#=或者=*#搜索.
+*** 在Shell和Interactive Interpreter中使用Evil
+可以=M-x shell=或者=M-x term=进入Shell.
+
+传统上大家都在Shell中用Emacs的默认快捷键.
+
+不过你仔细计算过的话,会发现Vim的快捷键更有效率.
+
+Shell的作用无非就是运行命令或者脚本代码,然后输出结果.
+
+当我们运行Shell的时候,命令和代码往往是从别的地方拷贝过来的.
+
+粘贴命令和代码到Shell中,分析/过滤/搜索输出的结果,都是Vim的快捷键更方便.
+
+我之前提到的所有关于Evil的技巧和插件都适用于此.
+
+Interactive Interpreter和Shell没有本质区别,无非就是解释器支持的语言不一样罢了.比如[[https://github.com/nonsequitur/inf-ruby][inf-ruby]]支持Ruby.
+
+你可以按=C-z=切换纯Emacs快捷键.我从不切换,因为我对这种杂交的快捷键非常满意.
+**** Evil的小结
+Evil不仅仅是提供了Vim的完美模拟.
 ** 答疑
 *** 菜鸟怎么开始
 到[[https://github.com/redguardtoo/emacs.d]] 参考"Install stable version in easiest way"一节.
