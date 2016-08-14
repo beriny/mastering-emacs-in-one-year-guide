@@ -73,10 +73,16 @@ Emacs作为其招牌软件也会维护下去,我的投资永不会贬值.
 
 我利用一年中通勤时间就取得了很大进步,自信到可以写下本文.
 ** 态度决定一切
-*** 真正理解软件自由
+*** 理解软件自由
 何为软件自由没有比自由软件基金会更权威了. 我建议把[[https://www.gnu.org/philosophy/free-sw.zh-cn.html]]反复读三遍,理解何为四大自由.
 
-让我们看看自由度0, 即"无论用户出于何种目的，必须可以按照用户意愿，可以随时随处自由地运行该软件".
+比如说自由度0, 即"无论用户出于何种目的，必须可以按照用r意愿，可以随时随处自由地运行该软件".很简单是吗?
+很多人抱怨[[https://elpa.gnu.org]]不是很稳定,以至于...
+
+#+begin_src bash
+curl -L https://elpa.gnu.org/packages/archive-contents | sed 's/^(1//g' | sed ':a;N;$!ba;s/\n/ /g' | sed 's/\])/])\n/g' | sed 's/^ *(\([a-z0-9A-Z-]*\).*\[(\([0-9 ]*\).*\(single\|tar\).*/\1-\2.\3/g' | sed 's/ /./g' | sed 's/single/el/g' | tr --delete ')' | xargs -i{} curl -L  -O https://elpa.gnu.org/packages/{}
+#+end_src
+
 *** 避免门户之见
 所谓门户之见就是贴标签."我们的"对应"他们的"."熟悉的"对应"陌生的","正统的"对应"异端"的.
 
